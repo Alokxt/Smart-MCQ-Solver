@@ -20,6 +20,9 @@ LR = 3e-5
 SAVE_PATH = "deberta_base_lora.pt"
 
 model = get_debertaLora()
+for name, param in model.named_parameters():
+        if param.requires_grad:
+            param.data = param.data.float
 train_loader, val_loader  = get_train_val_loader()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 optimizer = AdamW(

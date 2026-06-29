@@ -50,7 +50,5 @@ def get_debertaLora():
     model = model.to(device)
     return model 
 
-"""for name, param in model.named_parameters():
-    if param.requires_grad:
-        param.data = param.data.float
-        """
+    
+            

@@ -19,6 +19,15 @@ QUESTION_COL = "prompt2"
 ANSWER_COL = "answer"
 MODEL_NAME = "microsoft/deberta-v3-base"
 
+MODEL_NAME = "microsoft/deberta-v3-base"
+MAX_LEN = 192
+BATCH_SIZE = 2
+GRAD_ACCUM = 8
+EPOCHS = 15
+LR = 3e-5
+SAVE_PATH = "deberta_base_lora.pt"
+
+
 df = pd.read_csv(TRAIN_PATH)
 df.columns = [c.strip() for c in df.columns]
 print("Columns:", df.columns.tolist())
@@ -111,4 +120,6 @@ def get_train_val_loader():
     return train_loader , val_loader
 
 def get_test_loader():
-    
+    test_ds = MCQTestDataset(test_df, tokenizer, MAX_LEN)
+    test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=2, pin_memory=True)
+    return test_loader 

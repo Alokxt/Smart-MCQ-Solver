@@ -1,14 +1,28 @@
+from data.dataloaders import get_test_loader
+from models.deBerta import get_debertaLora
+import torch 
+import pandas as pd 
+import numpy as np 
 
-model = get_peft_model(base_model, lora_config)
+WEIGHTS_PATH = ""
+MODEL_NAME = "microsoft/deberta-v3-base"
+MAX_LEN = 192
+BATCH_SIZE = 2
+GRAD_ACCUM = 8
+EPOCHS = 15
+LR = 3e-5
+SAVE_PATH = "deberta_base_lora.pt"
+
+model = get_debertaLora()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.load_state_dict(torch.load(WEIGHTS_PATH, map_location=device), strict=False)
 model = model.to(device)
 model.eval()
-print("Model loaded successfully.")
+test_loader = get_test_loader()
 
+OPTION_COLS = ["A","B","C","D","E"]
+test_df = pd.read_csv("path")
 
-
-test_ds = MCQTestDataset(test_df, tokenizer, MAX_LEN)
-test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=2, pin_memory=True)
 
 all_probs = []
 with torch.no_grad():
